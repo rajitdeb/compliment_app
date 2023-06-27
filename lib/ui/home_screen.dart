@@ -1,12 +1,12 @@
-import 'package:complimentapp/all_compliments.dart';
-import 'package:complimentapp/compliment_screen.dart';
-import 'package:complimentapp/notification_model.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:complimentapp/ui/all_compliments.dart';
+import 'package:complimentapp/ui/compliment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,31 +16,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  NotificationAppLaunchDetails notificationAppLaunchDetails;
+  late NotificationAppLaunchDetails notificationAppLaunchDetails;
 
   final notifications = FlutterLocalNotificationsPlugin();
-  final GlobalKey<AnimatorWidgetState> basicAnimation =
-      GlobalKey<AnimatorWidgetState>();
+  
 
-//  List<noti_model> title = [
-//    noti_model(
-//        image: "assets/images/notification_icon.png", text: "this is first"),
-//    noti_model(
-//        image: "assets/images/notification_icon.png", text: "this is seccond"),
-//    noti_model(
-//        image: "assets/images/notification_icon.png", text: "this is third"),
-//    noti_model(
-//        image: "assets/images/notification_icon.png", text: "this is four"),
-//    noti_model(
-//        image: "assets/images/notification_icon.png", text: "this is five"),
-//    noti_model(
-//        image: "assets/images/notification_icon.png", text: "this is six"),
-//    noti_model(
-//        image: "assets/images/notification_icon.png", text: "this is seven"),
-//  ];
 
   List<DateTime> dates = [
-    DateTime(2020, 05, 23, 01, 40, 00),
+    DateTime(2023, 06, 28, 01, 40, 00),
     DateTime(2020, 05, 23, 01, 41, 00),
     DateTime(2020, 05, 23, 22, 42, 00),
     DateTime(2020, 05, 23, 22, 43, 00),
@@ -73,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
     DateTime(2020, 05, 22, 23, 03, 00),
   ];
 
-  SharedPreferences _prefs;
+  SharedPreferences? _prefs;
   int data = -1;
 
   @override
@@ -83,50 +66,54 @@ class _HomeScreenState extends State<HomeScreen> {
         FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid =
         AndroidInitializationSettings('drawable/app_icon');
-    var initializationSettingsIOS = IOSInitializationSettings();
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+    //final DarwinInitializationSettings initializationSettingsDarwin =
+    // DarwinInitializationSettings(
+    //     onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+   final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+   // iOS: initializationSettingsDarwin,
+    );
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+        onDidReceiveNotificationResponse: selectNotification);
     setNotification();
   }
 
   setNotification() async {
     _prefs = await SharedPreferences.getInstance();
 
-    if (_prefs.getInt("notification") == null) {
-      _prefs.setInt("notification", 0);
+    if (_prefs!.getInt("notification") == null) {
+      _prefs!.setInt("notification", 0);
       _scheduleNotification();
     }
   }
 
   Future<void> _scheduleNotification() async {
     print("hello");
-    var scheduledNotificationDateTime =
-        DateTime.now().add(Duration(seconds: 5));
+  
 
     notificationAppLaunchDetails =
-        await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+        (await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails())!;
 
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'your other channel id',
-      'your other channel name',
-      'your other channel description',
-    );
-    var iOSPlatformChannelSpecifics =
-        IOSNotificationDetails(sound: 'slow_spring_board.aiff');
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  
+  
     for (var i = 0; i <= 30; i++) {
       print('Day ${i + 1}');
       print(dates[i]);
-      await flutterLocalNotificationsPlugin.schedule(
-          i,
-          'Hey Nikka',
-          'Have You Checked Your Today\'s Surprise ????',
-          dates[i],
-          platformChannelSpecifics,
-          payload: '''$i''');
+ await flutterLocalNotificationsPlugin.zonedSchedule(
+      i,
+      'Hey Nikka',
+      'Have You Checked Your Today\'s Surprise ????',
+      tz.TZDateTime.from(dates[i], tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'your_channel_id',
+          'your_channel_name',
+        ),
+      ),
+      payload: '$i',
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
     }
   }
 
@@ -134,7 +121,53 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
+        child: RenderBody()),
+    );
+  }
+
+
+  Future selectNotification(NotificationResponse response) async {
+    _prefs = await SharedPreferences.getInstance();
+
+    if (_prefs!.getInt("payload") != null) {
+      data = _prefs!.getInt("payload")!;
+    }
+
+    _prefs!.setInt("payload", int.parse(response.payload!));
+
+    if (data < int.parse(response.payload!)) {
+      if (response != null) {
+        debugPrint('notification payload: ' + response.payload!);
+      }
+
+      await flutterLocalNotificationsPlugin.cancel(int.parse(response.payload!));
+
+    
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Compli(payload: response.payload!)),
+      );
+    }
+  }
+
+
+}
+
+class RenderBody extends StatefulWidget {
+  const RenderBody({super.key});
+
+  @override
+  State<RenderBody> createState() => _RenderBodyState();
+}
+
+class _RenderBodyState extends State<RenderBody> {
+
+  final GlobalKey<AnimatorWidgetState> basicAnimation =
+      GlobalKey<AnimatorWidgetState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
           children: <Widget>[
             Container(
               height: double.infinity,
@@ -273,48 +306,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )
           ],
-        ),
-      ),
-    );
+        )
+      ;
   }
 
-  Future selectNotification(String payload) async {
-    _prefs = await SharedPreferences.getInstance();
-
-    if (_prefs.getInt("payload") != null) {
-      data = _prefs.getInt("payload");
-    }
-
-    _prefs.setInt("payload", int.parse(payload));
-
-    if (data < int.parse(payload)) {
-      if (payload != null) {
-        debugPrint('notification payload: ' + payload);
-      }
-
-      await flutterLocalNotificationsPlugin.cancel(int.parse(payload));
-
-      // showDialog(
-      //   context: context,
-      //   builder: (BuildContext context) {
-      //     return AlertDialog(
-      //       content:  Text('notification payload: ' + payload),
-
-      //     );
-      //   },);
-      await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Compli(payload: payload)),
-      );
-    }
-  }
-
-  void setAnimation() {
+    void setAnimation() {
     timeDilation = 3.0;
-    basicAnimation.currentState.forward();
+    basicAnimation.currentState!.forward();
     timeDilation = 3.0;
-    basicAnimation.currentState.reverse();
+    basicAnimation.currentState!.reverse();
     timeDilation = 3.0;
-    basicAnimation.currentState.forward();
+    basicAnimation.currentState!.forward();
   }
 }
+

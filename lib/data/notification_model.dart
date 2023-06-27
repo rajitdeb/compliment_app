@@ -1,8 +1,8 @@
-class noti_model{
-  String image;
-  String text;
+class NotiModel{
+  final String image;
+  final String text;
 
-  noti_model({this.image,this.text});
+  NotiModel({required this.image,required this.text});
 
   Map<String,dynamic >toJson(){
     var map=<String,dynamic>{

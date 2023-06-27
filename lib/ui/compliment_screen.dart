@@ -1,10 +1,10 @@
-import 'package:complimentapp/compli_model.dart';
-import 'package:complimentapp/home_screen.dart';
+import 'package:complimentapp/data/ui/compli_model.dart';
+import 'package:complimentapp/ui/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class Compli extends StatefulWidget {
   final String payload;
-  Compli({this.payload});
+  Compli({required this.payload});
   @override
   _CompliState createState() => _CompliState();
 }

@@ -1,7 +1,6 @@
-import 'package:complimentapp/compli_model.dart';
-import 'package:complimentapp/compliment_screen.dart';
-import 'package:complimentapp/home_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:complimentapp/data/ui/compli_model.dart';
+import 'package:complimentapp/ui/compliment_screen.dart';
+import 'package:complimentapp/ui/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,7 +10,7 @@ class AllCompli extends StatefulWidget {
 }
 
 class _AllCompliState extends State<AllCompli> {
-  SharedPreferences _prefs;
+  SharedPreferences? _prefs;
   int data = 0;
   List<CompliModel> complis = CompliModel.compli;
 
@@ -24,7 +23,7 @@ class _AllCompliState extends State<AllCompli> {
   getKey() async {
     _prefs = await SharedPreferences.getInstance();
     setState(() {
-      data = _prefs.getInt("payload");
+      data = _prefs!.getInt("payload")!;
     });
     print(data);
   }
@@ -32,9 +31,6 @@ class _AllCompliState extends State<AllCompli> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar:AppBar(
-//        backgroundColor: Colors.transparent,
-//      ),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -79,8 +75,8 @@ class _AllCompliState extends State<AllCompli> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Compli(
-                                      payload:index.toString() ,
-                                    )),
+                                          payload: index.toString(),
+                                        )),
                               );
                             },
                             child: Card(

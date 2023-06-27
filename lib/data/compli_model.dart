@@ -1,10 +1,10 @@
-import 'package:complimentapp/strings.dart';
+import 'package:complimentapp/util/strings.dart';
 
 class CompliModel {
   String image;
   String text;
 
-  CompliModel({this.image, this.text});
+  CompliModel({required this.image,required this.text});
 
   Map<String, dynamic> toJson() {
     var map = <String, dynamic>{

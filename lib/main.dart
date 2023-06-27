@@ -1,4 +1,4 @@
-import 'package:complimentapp/home_screen.dart';
+import 'package:complimentapp/ui/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
