@@ -1,4 +1,4 @@
-import 'package:complimentapp/data/ui/compli_model.dart';
+import 'package:complimentapp/data/compli_model.dart';
 import 'package:complimentapp/ui/compliment_screen.dart';
 import 'package:complimentapp/ui/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +20,20 @@ class _AllCompliState extends State<AllCompli> {
     getKey();
   }
 
-  getKey() async {
-    _prefs = await SharedPreferences.getInstance();
+  Future<void> getKey() async {
+     _prefs = await SharedPreferences.getInstance();
+  if (_prefs != null) {
+    int payload;
+    if (_prefs!.containsKey("payload")) {
+      payload = _prefs!.getInt("payload")!;
+    } else {
+      payload = 0;
+    }
     setState(() {
-      data = _prefs!.getInt("payload")!;
+      data = payload;
     });
+  }
+
     print(data);
   }
 
