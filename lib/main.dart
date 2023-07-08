@@ -7,6 +7,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initNotification();
+      
   tz.initializeTimeZones();
   runApp(MaterialApp(
        navigatorKey: navigatorKey,

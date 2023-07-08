@@ -87,7 +87,8 @@ class _RenderBodyState extends State<RenderBody> {
                               border: Border.all(
                                   width: 8, color: Color(0xffe6dcca)),
                               image: DecorationImage(
-                                  image: AssetImage("assets/images/main-1.png"),
+                                  image:
+                                      AssetImage("assets/images/main-1.jfif"),
                                   fit: BoxFit.cover)),
                         ),
                       ),
@@ -105,7 +106,8 @@ class _RenderBodyState extends State<RenderBody> {
                               border: Border.all(
                                   width: 8, color: Color(0xffe6dcca)),
                               image: DecorationImage(
-                                  image: AssetImage("assets/images/main-2.png"),
+                                  image:
+                                      AssetImage("assets/images/main-2.jfif"),
                                   fit: BoxFit.cover)),
                         ),
                       ),
@@ -131,7 +133,8 @@ class _RenderBodyState extends State<RenderBody> {
                               border: Border.all(
                                   width: 8, color: Color(0xffe6dcca)),
                               image: DecorationImage(
-                                  image: AssetImage("assets/images/main-3.png"),
+                                  image:
+                                      AssetImage("assets/images/main-3.jfif"),
                                   fit: BoxFit.cover)),
                         ),
                       ),
@@ -149,7 +152,8 @@ class _RenderBodyState extends State<RenderBody> {
                               border: Border.all(
                                   width: 8, color: Color(0xffe6dcca)),
                               image: DecorationImage(
-                                  image: AssetImage("assets/images/main-4.png"),
+                                  image:
+                                      AssetImage("assets/images/main-4.jfif"),
                                   fit: BoxFit.cover)),
                         ),
                       ),

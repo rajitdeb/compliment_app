@@ -1,6 +1,7 @@
 import 'package:complimentapp/ui/compliment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -14,21 +15,25 @@ class NotificationService {
   int data = -1;
 
   List<DateTime> dates = [
-    DateTime(2023, 07, 04, 00, 40, 00),
-    DateTime(2023, 07, 04, 00, 41, 00),
-    DateTime(2023, 07, 04, 00, 42, 00),
-    DateTime(2023, 07, 04, 00, 43, 00),
-    DateTime(2023, 07, 04, 00, 44, 00),
-    DateTime(2023, 07, 04, 00, 45, 00),
-    DateTime(2023, 07, 04, 00, 46, 00),
-    DateTime(2023, 07, 04, 00, 47, 00),
-    DateTime(2023, 07, 04, 00, 48, 00),
-    DateTime(2023, 07, 04, 00, 49, 00),
-    DateTime(2023, 07, 04, 00, 40, 00),
+    DateTime(2023, 07, 08, 16, 10, 00),
+    DateTime(2023, 07, 08, 16, 11, 00),
+    DateTime(2023, 07, 08, 16, 12, 00),
+    DateTime(2023, 07, 08, 16, 13, 00),
+    DateTime(2023, 07, 08, 16, 14, 00),
+    DateTime(2023, 07, 08, 16, 15, 00),
+    DateTime(2023, 07, 08, 16, 16, 00),
+    DateTime(2023, 07, 08, 16, 17, 00),
+    DateTime(2023, 07, 08, 16, 18, 00),
+    DateTime(2023, 07, 08, 16, 19, 00),
+    DateTime(2023, 07, 08, 16, 20, 00),
   ];
 
   Future<void> initNotification() async {
-
+    await Permission.notification.isDenied.then((value) {
+      if (value) {
+        Permission.notification.request();
+      }
+    });
     AndroidInitializationSettings initializationSettingsAndroid =
         const AndroidInitializationSettings('app_icon');
 
@@ -43,16 +48,13 @@ class NotificationService {
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: selectNotification);
-    print("data2......");
     scheduleNotification();
   }
 
-  selectNotification(NotificationResponse response,) async {
-    
+  selectNotification(
+    NotificationResponse response,
+  ) async {
     _prefs = await SharedPreferences.getInstance();
-
-    print("data......" + data.toString());
-
 
     if (_prefs!.getInt("payload") != null) {
       data = _prefs!.getInt("payload")!;
@@ -61,10 +63,7 @@ class NotificationService {
     _prefs!.setInt("payload", int.parse(response.payload!));
 
     if (data < int.parse(response.payload!)) {
-      debugPrint('notification payload: ' + response.payload!);
-
       await notificationsPlugin.cancel(int.parse(response.payload!));
-     
 
       await Navigator.push(
         navigatorKey.currentContext!,
@@ -81,24 +80,18 @@ class NotificationService {
         iOS: DarwinNotificationDetails());
   }
 
-  Future showNotification(
-      {int id = 0, String? title, String? body, String? payLoad}) async {
-    return notificationsPlugin.show(
-        id, title, body, await notificationDetails());
-  }
+  // Future showNotification(
+  //     {int id = 0, String? title, String? body, String? payLoad}) async {
+  //   return notificationsPlugin.show(
+  //       id, title, body, await notificationDetails());
+  // }
 
   Future<void> scheduleNotification() async {
-    print("hello");
-
-    for (var i = 0; i <= 10; i++) {
-      print('Day ${i + 1}');
-      print(dates[i]);
-
+    for (var i = 0; i <= 9; i++) {
       await notificationsPlugin.zonedSchedule(
         i,
         'Hey Flash',
-        //'Have You Checked Your Today\'s Surprise ???? Day-$i',
-         'Have You ??Day-$i',
+        'Check surprise of Day-$i',
         tz.TZDateTime.from(dates[i], tz.local),
         const NotificationDetails(
           android: AndroidNotificationDetails(

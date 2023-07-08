@@ -13,9 +13,6 @@ class _CompliState extends State<Compli> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar:AppBar(
-//        backgroundColor: Colors.transparent,
-//      ),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -34,10 +31,6 @@ class _CompliState extends State<Compli> {
                   child: InkWell(
                       onTap: () {
                         Navigator.pop(context);
-//                        Navigator.push(
-//                          context,
-//                          MaterialPageRoute(builder: (context) => HomeScreen()),
-//                        );
                       },
                       child: Image.asset(
                         "assets/images/back_arrow.png",
@@ -74,21 +67,12 @@ class _CompliState extends State<Compli> {
                     ),
                   ),
                   SizedBox(height: 40),
-                  widget.payload == "1"
-                      ? CircleAvatar(
-                          radius: 80,
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            backgroundImage: AssetImage(
-                                complis[int.parse(widget.payload)].image),
-                            radius: 75,
-                          ),
-                        )
-                      : Image.asset(
-                          complis[int.parse(widget.payload)].image,
-                          height: 30,
-                          width: 30,
-                        ),
+                  Image.asset(
+                    complis[int.parse(widget.payload)].image,
+                    height: 200,
+                    width: 160,
+                    fit: BoxFit.cover,
+                  ),
                   SizedBox(height: 25),
                   Padding(
                     padding: const EdgeInsets.symmetric(
