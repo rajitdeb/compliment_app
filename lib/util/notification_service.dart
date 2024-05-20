@@ -1,4 +1,4 @@
-import 'package:complimentapp/ui/compliment_screen.dart';
+import 'package:complimentapp/ui/compliment_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -68,7 +68,8 @@ class NotificationService {
       await Navigator.push(
         navigatorKey.currentContext!,
         MaterialPageRoute(
-            builder: (context) => Compli(payload: response.payload!)),
+            builder: (context) =>
+                ComplimentDetailScreen(payload: response.payload!)),
       );
     }
   }

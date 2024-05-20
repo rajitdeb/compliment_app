@@ -1,4 +1,4 @@
-import 'package:complimentapp/ui/all_compliments.dart';
+import 'package:complimentapp/ui/all_compliments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
@@ -172,7 +172,8 @@ class _RenderBodyState extends State<RenderBody> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AllCompli()),
+                    MaterialPageRoute(
+                        builder: (context) => AllComplimentsScreen()),
                   );
                 },
                 child: Image.asset("assets/images/notification_icon.png",
