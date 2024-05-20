@@ -1,9 +1,10 @@
-import 'package:complimentapp/data/compliment_provider.dart';
-import 'package:complimentapp/data/shared_pref_provider.dart';
-import 'package:complimentapp/ui/compliment_detail_screen.dart';
-import 'package:complimentapp/ui/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../data/shared_pref_provider.dart';
+import '../ui/home_screen.dart';
+import '../util/constants.dart';
+import '/ui/components/compliment_list.dart';
 
 class AllComplimentsScreen extends StatelessWidget {
   @override
@@ -13,6 +14,7 @@ class AllComplimentsScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: <Widget>[
+            // All Compliments Screen Background Image
             Container(
               height: double.infinity,
               width: double.infinity,
@@ -23,101 +25,51 @@ class AllComplimentsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Provider.of<SharedPrefProvider>(context).data == 0
-                ? Center(
-                    child: Container(
-                      child: Text(
-                        "No Compliment for today !!!\n Come Tomorrow 😊.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontFamily: 'monster',
-                        ),
+            Column(
+              children: [
+                // Back Button
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: GestureDetector(
+                      onTap: () {
+                        // Go back to Home Screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                      },
+                      child: Image.asset(
+                        "assets/images/back_arrow.png",
+                        height: 30.0,
+                        width: 30.0,
                       ),
                     ),
-                  )
-                : Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 30),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),
-                                ),
-                              );
-                            },
-                            child: Image.asset(
-                              "assets/images/back_arrow.png",
-                              height: 30,
-                              width: 30,
+                  ),
+                ),
+                Provider.of<SharedPrefProvider>(context).data == 0
+                    ? Expanded(
+                        child: Center(
+                          child: Container(
+                            child: Text(
+                              "No Compliment for today !!!\n Come Tomorrow 😊.",
+                              textAlign: TextAlign.center,
+                              style: kAllComplementScreenEmptyTextStyle,
                             ),
                           ),
                         ),
-                      ),
-                      Expanded(
+                      )
+                    : Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),
-                          child: ListView.builder(
-                              itemCount:
-                                  Provider.of<SharedPrefProvider>(context).data,
-                              shrinkWrap: true,
-                              itemBuilder: (context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ComplimentDetailScreen(
-                                          payload: index.toString(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            "Day: ${index + 1}",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16.0,
-                                              fontFamily: 'monster',
-                                            ),
-                                          ),
-                                          SizedBox(width: 15.0),
-                                          Flexible(
-                                              child: Text(
-                                            Provider.of<ComplimentProvider>(
-                                                    context)
-                                                .compliments[index]
-                                                .text,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15.0,
-                                              fontFamily: 'monster',
-                                            ),
-                                          )),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
+                          child: ComplimentList(),
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+              ],
+            ),
           ],
         ),
       ),

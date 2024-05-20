@@ -10,7 +10,7 @@ class SharedPrefProvider extends ChangeNotifier {
     if (_prefs != null) {
       (_prefs!.containsKey("payload"))
           ? data = _prefs!.getInt("payload")! // payload key exists
-          : data = 2; // payload key doesn't exist
+          : data = 0; // payload key doesn't exist
       notifyListeners();
     }
   }
