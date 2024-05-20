@@ -1,8 +1,8 @@
+import '/ui/components/back_arrow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/shared_pref_provider.dart';
-import '../ui/home_screen.dart';
 import '../util/constants.dart';
 import '/ui/components/compliment_list.dart';
 
@@ -28,28 +28,7 @@ class AllComplimentsScreen extends StatelessWidget {
             Column(
               children: [
                 // Back Button
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: GestureDetector(
-                      onTap: () {
-                        // Go back to Home Screen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
-                          ),
-                        );
-                      },
-                      child: Image.asset(
-                        "assets/images/back_arrow.png",
-                        height: 30.0,
-                        width: 30.0,
-                      ),
-                    ),
-                  ),
-                ),
+                BackArrowButton(onPressed: () => Navigator.pop(context)),
                 Provider.of<SharedPrefProvider>(context).data == 0
                     ? Expanded(
                         child: Center(
