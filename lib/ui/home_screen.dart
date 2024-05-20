@@ -1,19 +1,13 @@
-import 'package:complimentapp/ui/all_compliments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
+import '../ui/all_compliments_screen.dart';
+import '../ui/components/notification_icon_button.dart';
+import '../ui/components/photo_grid_row.dart';
 
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
+import '../util/constants.dart';
 
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +24,7 @@ class RenderBody extends StatefulWidget {
 }
 
 class _RenderBodyState extends State<RenderBody> {
+  // Basic Animations
   final GlobalKey<AnimatorWidgetState> basicAnimation =
       GlobalKey<AnimatorWidgetState>();
   final GlobalKey<AnimatorWidgetState> basicAnimation1 =
@@ -43,176 +38,61 @@ class _RenderBodyState extends State<RenderBody> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
+        // Home Bac
         Container(
-          height: double.infinity,
-          width: double.infinity,
           decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/back.png"),
-                  fit: BoxFit.cover)),
+            image: DecorationImage(
+              image: AssetImage("assets/images/back.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
+
+        // Flash Photo Grid
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              SizedBox(height: 30),
+              SizedBox(height: 30.0),
+
+              // Page Title
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Text(
                   "HEY Flash !!",
-                  style: TextStyle(
-                      color: Color(0xfffdd05a),
-                      fontSize: 40,
-                      fontFamily: 'knewave'),
+                  style: kHomeScreenPageTitleTextStyle,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    BounceIn(
-                      key: basicAnimation,
-                      child: InkWell(
-                        onTap: () {
-                          setAnimation(basicAnimation);
-                        },
-                        child: Container(
-                          height: 180,
-                          width: 145,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 8, color: Color(0xffe6dcca)),
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/main-1.jfif"),
-                                  fit: BoxFit.cover)),
-                        ),
-                      ),
-                    ),
-                    BounceIn(
-                      key: basicAnimation1,
-                      child: InkWell(
-                        onTap: () {
-                          setAnimation(basicAnimation1);
-                        },
-                        child: Container(
-                          height: 180,
-                          width: 145,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 8, color: Color(0xffe6dcca)),
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/main-2.jfif"),
-                                  fit: BoxFit.cover)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
+              // Photo Grid Row 1
+              PhotoGridRow(
+                photoAnimationKey1: basicAnimation,
+                assetImage1: "assets/images/main-1.jfif",
+                photoAnimationKey2: basicAnimation1,
+                assetImage2: "assets/images/main-2.jfif",
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    BounceIn(
-                      key: basicAnimation2,
-                      child: InkWell(
-                        onTap: () {
-                          setAnimation(basicAnimation2);
-                        },
-                        child: Container(
-                          height: 180,
-                          width: 145,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 8, color: Color(0xffe6dcca)),
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/main-3.jfif"),
-                                  fit: BoxFit.cover)),
-                        ),
-                      ),
-                    ),
-                    BounceIn(
-                      key: basicAnimation3,
-                      child: InkWell(
-                        onTap: () {
-                          setAnimation(basicAnimation3);
-                        },
-                        child: Container(
-                          height: 180,
-                          width: 145,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 8, color: Color(0xffe6dcca)),
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/main-4.jfif"),
-                                  fit: BoxFit.cover)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
+              // Photo Grid Row 2
+              PhotoGridRow(
+                photoAnimationKey1: basicAnimation2,
+                assetImage1: "assets/images/main-3.jfif",
+                photoAnimationKey2: basicAnimation3,
+                assetImage2: "assets/images/main-4.jfif",
               ),
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 30, right: 30),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AllComplimentsScreen()),
-                  );
-                },
-                child: Image.asset("assets/images/notification_icon.png",
-                    height: 60, width: 60)),
-          ),
-        )
+
+        // Notification Icon Button
+        NotificationIconButton(onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AllComplimentsScreen()),
+          );
+        }),
       ],
     );
-  }
-
-  void setAnimation(key) {
-    if (key == basicAnimation1) {
-      timeDilation = 3.0;
-      basicAnimation1.currentState!.forward();
-      timeDilation = 3.0;
-      basicAnimation1.currentState!.reverse();
-      timeDilation = 3.0;
-      basicAnimation1.currentState!.forward();
-    } else if (key == basicAnimation2) {
-      timeDilation = 3.0;
-      basicAnimation2.currentState!.forward();
-      timeDilation = 3.0;
-      basicAnimation2.currentState!.reverse();
-      timeDilation = 3.0;
-      basicAnimation2.currentState!.forward();
-    } else if (key == basicAnimation3) {
-      timeDilation = 3.0;
-      basicAnimation3.currentState!.forward();
-      timeDilation = 3.0;
-      basicAnimation3.currentState!.reverse();
-      timeDilation = 3.0;
-      basicAnimation3.currentState!.forward();
-    } else {
-      timeDilation = 3.0;
-      basicAnimation.currentState!.forward();
-      timeDilation = 3.0;
-      basicAnimation.currentState!.reverse();
-      timeDilation = 3.0;
-      basicAnimation.currentState!.forward();
-    }
   }
 }
